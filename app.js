@@ -4,6 +4,35 @@ const button = document.getElementById('button')
 let dado = []
 let i = 0; // Controla o índice atual
 
+
+window.onload = function() {
+    Object.keys(localStorage).sort((a, b) => a - b).forEach(chave => {
+        if (!isNaN(chave)) {
+            const indiceNum = parseInt(chave);
+            const valorTarefa = localStorage.getItem(chave);
+            
+            dado[indiceNum] = valorTarefa;
+            if (indiceNum >= i) {
+                i = indiceNum + 1; 
+            }
+
+            
+            renderizarTarefaNaTela(indiceNum, valorTarefa);
+        }
+    });
+}
+
+function renderizarTarefaNaTela(indice, texto) {
+    display.innerHTML += 
+    `<div class="tarefa" id="tarefa-${indice}">
+        ${texto} 
+        <div class="buttons">
+            <button class="delete" data-index="${indice}">Apagar</button>
+            <button class="edit" data-index="${indice}">Editar</button>
+        </div>
+    </div>`;
+}
+
 function inserirTarefa(){
     if (input.value.trim() === ''){
         alert("insira uma tarefa, por favor");
@@ -12,49 +41,38 @@ function inserirTarefa(){
 
     dado.push(input.value);
 
-    // Inserimos o data-index na div principal e nos botões
-    display.innerHTML += 
-    `<div class="tarefa" id="tarefa-${i}">
-        ${dado[i]} 
-        <div class="buttons">
-            <button class="delete" data-index="${i}">Apagar</button>
-            <button class="edit" data-index="${i}">Editar</button>
-        </div>
-    </div>`;
+    // Usa a função auxiliar para colocar na tela
+    renderizarTarefaNaTela(i, input.value);
 
     // Salva no LocalStorage usando o índice atual
-    localStorage.setItem(i, dado[i]);
+    localStorage.setItem(i, input.value);
 
     i++; // Incrementa para a próxima tarefa
     input.value = '';
 }
 
 function gerenciarTarefa(event){
-    // Captura o índice do botão que foi clicado
     const index = event.target.getAttribute('data-index');
 
-    // Se o clique foi no botão de deletar
     if(event.target.classList.contains("delete")){
-        // 1. Remove do LocalStorage usando o índice capturado
         localStorage.removeItem(index);
         
-        // 2. Remove o elemento visual do HTML
+        // Remove também do array para manter sincronizado
+        delete dado[index]; 
+        
         const tarefaElemento = document.getElementById(`tarefa-${index}`);
         if (tarefaElemento) {
             tarefaElemento.remove();
         }
     }
     
-    // Se o clique foi no botão de editar
     if(event.target.classList.contains("edit")){
         const novoTexto = prompt("Edite o seu Texto aqui:");
         
         if (novoTexto && novoTexto.trim() !== "") {
-            // Atualiza no array e no LocalStorage
             dado[index] = novoTexto;
             localStorage.setItem(index, novoTexto);
             
-            // Atualiza apenas o texto na tela (recarregando a estrutura daquela tarefa específica)
             const tarefaElemento = document.getElementById(`tarefa-${index}`);
             tarefaElemento.innerHTML = `
                 ${novoTexto} 

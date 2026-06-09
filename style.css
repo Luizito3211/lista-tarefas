@@ -1,5 +1,16 @@
+body {
+    background-color: #dd99b3;
+}
+
+#estrelinha {
+    font-size: 50px;
+    text-align: center;
+    color: white;
+}
+
 .container {
  border: 1px solid #000;
+ background-color: rgb(248, 214, 246);
  width: 750px;
  margin:auto;
  margin-top: 120px;
@@ -14,7 +25,7 @@
 
 #button {
     font-size: 25px;
-    background-color: #4682b4;
+    background-color: #c06fe0;
     border: none;
     height: 58px;
     width: 58px;
@@ -29,8 +40,8 @@
 }
 
 .delete {
-    border: none;
-    background-color: #276faa;
+    border: hsl(hue, saturation, lightness);
+    background-color: #a143b4;
     color: white;
 }
 
@@ -38,4 +49,9 @@
     display: flex;
     justify-content: space-between;
     padding: 10px;
+}
+
+.edit {
+    background-color: #a143b4;
+    color: white
 }
